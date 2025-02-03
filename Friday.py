@@ -1,8 +1,12 @@
 import speech_recognition as sr
 import pyttsx3
+import pywhatkit
 import datetime
+import wikipedia
 import pyjokes
-
+import pyautogui
+import time
+import keyboard
 
 listener = sr.Recognizer()
 engine = pyttsx3.init()
@@ -54,8 +58,13 @@ def run_friday():
         return True 
 
     try:
-        
-        if 'time' in command:
+        if "play from youtube" in command:
+            song = command.replace('play from youtube', '').strip()
+            talk(f"Alright, boss. Playing the song '{song}' as you asked for.")
+            pywhatkit.playonyt(song)
+            return False
+
+        elif 'time' in command:
             times = datetime.datetime.now().strftime('%I:%M %p')
             talk(f"boss, the current time is {times}.")
 
@@ -70,7 +79,7 @@ def run_friday():
 
         elif "joke" in command:
             talk(pyjokes.get_joke())
-
+      
         
         elif "thank" in command:
             talk("It's my pleasure to help you, boss.")
@@ -83,9 +92,53 @@ def run_friday():
 
         elif "what is your purpose" in command:
             talk("boss, my purpose is to help you in your daily work.")
+
+        elif "search"  in command:
+            search_query = command.replace("search", "").strip()
+            talk(f"Searching for {search_query} on Google.")
+            pywhatkit.search(search_query)
+            return False
             
             
-        
+        elif "open spotify" in command:
+            talk("Alright Boss")
+            pyautogui.press('win')
+            time.sleep(1)
+            pyautogui.write('Spotify')
+            time.sleep(1)
+            pyautogui.press('enter')
+            
+
+        elif "play from spotify" in command:
+            song = command.replace("play from spotify", "").strip()
+            talk(f"Alright, boss. Playing the song '{song}' as you asked for from Spotify.")
+            pyautogui.press('win')
+            time.sleep(1)
+            pyautogui.write('Spotify')
+            time.sleep(1)
+            pyautogui.press('enter')
+            
+            
+            time.sleep(7)
+            pyautogui.hotkey('ctrl', 'k')
+            time.sleep(1)
+            pyautogui.write(song, interval=0.3)
+            time.sleep(1)
+            keyboard.send("enter")
+            time.sleep(2)
+            talk(f"The {song} is playing boss")
+            return False
+
+        elif "close" in command:
+            talk("Alright, boss. I am closing the application.")
+            pyautogui.hotkey('alt', 'F4')
+            return False
+
+
+        elif "go to sleep" in command:
+            talk("Alright, boss. Turning off my system. Goodbye!")
+            return False  
+
         else:
             talk("Sorry, boss. I can't understand. Can you please say it again?")
     except Exception as e:
